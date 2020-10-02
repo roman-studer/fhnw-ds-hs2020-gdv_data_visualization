@@ -1,0 +1,88 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(dplyr)
+
+# color blind palette
+cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#0072B2", "#D55E00", "#CC79A7")
+```
+```{r}
+avatar <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-08-11/avatar.csv')
+```
+```{r}
+avatar
+```
+```{r}
+# unique(avatar$character)
+```
+
+```{r}
+# filter for main protagonists 
+main <- list("Aang","Zuko","Katara","Toph","Sokka","Azula","Iroh")
+water <- filter(filter(avatar, character %in% main), book == "Water")
+fire <- filter(filter(avatar, character %in% main), book == "Fire")
+earth <- filter(filter(avatar, character %in% main), book == "Earth")
+```
+
+
+```{r}
+ggplot(data = water, mapping = aes(x = chapter, fill = character))+
+  geom_bar(position = "fill")+
+  coord_flip() +
+  scale_x_discrete(limits=rev(unique(water$chapter)))+
+  scale_fill_manual(values=cbPalette,
+                    guide = guide_legend(reverse = TRUE))+
+  labs(title= 'Who spoke most frequently?',
+       subtitle = "Book: Water",
+       x='Episode',
+       y='Percentage', 
+       fill="Character:")+
+  theme_minimal()+
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        legend.position = 'top',
+        plot.title = element_text(hjust = -0.85, vjust=-2),
+        plot.subtitle = element_text(hjust = -0.51, vjust=-1),
+        panel.grid.major = element_blank()
+        )
+```
+```{r}
+water
+```
+# Who spoke the most words?
+```{r}
+# count words per row in character_words
+water$words <- sapply(strsplit(water$character_words, " "), length)
+water_a <- aggregate(water$words, by=list(Character=water$character, Chapter=water$chapter), FUN=sum)
+water_a
+```
+```{r}
+ggplot(data=water_a, mapping = aes(x = Chapter, 
+                                   y = x, 
+                                   color = Character))+
+  geom_point()+
+  theme_minimal()+
+  scale_x_discrete(limits=rev(unique(water$chapter)))+
+  labs(x='Episode', 
+       y='Words spoken',
+       title='Who spoke the most words?',
+       subtitle="Book: Water")+
+  scale_color_manual(values=cbPalette,
+                    guide = guide_legend(reverse = TRUE))+
+  theme(plot.title = element_text(hjust = -1.5, vjust=-2),
+        plot.subtitle = element_text(hjust = -0.7, vjust=-1.2))+
+  coord_flip()
+```
+
+
+# Which chapter has the most dialog?
+# Which words are popular?
+# Who spoke the most in the most popular episodes?
+
+
