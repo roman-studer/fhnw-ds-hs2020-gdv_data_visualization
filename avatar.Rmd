@@ -76,13 +76,32 @@ ggplot(data=water_a, mapping = aes(x = Chapter,
   scale_color_manual(values=cbPalette,
                     guide = guide_legend(reverse = TRUE))+
   theme(plot.title = element_text(hjust = -1.5, vjust=-2),
-        plot.subtitle = element_text(hjust = -0.7, vjust=-1.2))+
+        plot.subtitle = element_text(hjust = -0.7, vjust=-1.2),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank())+
   coord_flip()
 ```
-
-
+```{r}
 # Which chapter has the most dialog?
-# Which words are popular?
-# Who spoke the most in the most popular episodes?
-
-
+water_b <- aggregate(water_a$x, by=list(Chapter=water_a$Chapter), FUN=sum)
+water_b
+```
+```{r}
+ggplot(mapping = aes(x = water_b$Chapter, y = water_b$x))+
+  geom_segment(mapping =aes(x = water_b$Chapter, xend = water_b$Chapter, y=0, yend=water_b$x-20), color="56B4E9") +
+  geom_point( color="#0072B2", size=4, alpha=0.6) +
+  scale_x_discrete(limits=rev(unique(water$chapter)))+
+  labs(title = 'Which chapter has the most dialog?',
+       subtitle = 'Book: Water',
+       x = 'Episode',
+       y = 'Dialog [in Words]')+
+  theme_light() +
+  coord_flip() +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.border = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.title = element_text(hjust = -1.2, vjust=-1),
+    plot.subtitle = element_text(hjust = -0.535, vjust=-1.0),
+    panel.grid.minor = element_blank())
+```
