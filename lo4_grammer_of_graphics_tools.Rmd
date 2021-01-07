@@ -1,18 +1,36 @@
 ---
-title: "R Notebook"
+title: 'gdv LO4'
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
-
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+This notebook holds the plots used in the gdv_Report from Roman Studer (LO4)
 
 ```{r}
-plot(cars)
+library(tidyverse)
+head(mpg)
+```
+```{r}
+ggplot(data = mpg, mapping =aes(x=displ, y=cty))+
+        geom_point()+
+        labs(title = 'dspl vs. cty')
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+```{r}
+ggplot(data = mpg, mapping =aes(x=displ, y=cty, color=class))+
+        geom_point()+
+        labs(title = 'dspl vs. cty')
+```
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+```{r}
+ggplot(data = mpg, mapping =aes(x=displ, y=cty, color = class))+
+        geom_point()+
+        labs(title = 'dspl vs. cty')+
+        facet_wrap(mpg$cyl, ncol = 4)
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```
+```{r}
+ggplot(data = mpg, mapping =aes(x=displ, y=cty, color = class))+
+        geom_point()+
+        labs(title = 'dspl vs. cty')+
+        coord_polar()
+```
